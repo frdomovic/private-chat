@@ -21,6 +21,7 @@ export default function DMDetailsPopup({
     <DMDetailsContainer
       channelName={chat.username ?? ""}
       chat={chat}
+      onClose={() => setIsOpen(false)}
     />
   );
 

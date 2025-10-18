@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { styled } from "styled-components";
 import BaseModal from "../common/popups/BaseModal";
 import TabbedInterface from "../contextOperations/TabbedInterface";
@@ -85,6 +85,7 @@ export default function SettingsPopup({ isOpen, setIsOpen, toggle }: SettingsPop
     { id: "invite-to-context", label: "Invite to Context" },
     { id: "create-identity", label: "Create Identity" },
     { id: "notification-settings", label: "Notification Settings" },
+    { id: "crypto-settings", label: "Crypto Settings" },
   ];
 
   const popupContent = (
