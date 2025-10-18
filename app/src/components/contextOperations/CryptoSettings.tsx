@@ -1,78 +1,55 @@
 import { useEffect, useState } from "react";
 import { UserButton, useUser } from "@civic/auth-web3/react";
-import { useAccount, useChainId, useBalance, useSwitchChain, useDisconnect } from "wagmi";
+import { useAccount, useChainId, useBalance, useConnect, useDisconnect } from "wagmi";
 import { ClientApiDataSource } from "../../api/dataSource/clientApiDataSource";
 import { getExecutorPublicKey } from "@calimero-network/calimero-client";
 import { sepolia } from "wagmi/chains";
-import { BalanceValue, ChainWarning, ChainWarningText, CivicSection, CivicTitle, Container, ErrorText, formatBalance, InfoCard, InfoRow, Label, LoadingCryptoKey, LoadingText, NetworkInfo, PublicKeyValue, Section, SectionTitle, StyledUserButton, SuccessText, SwitchChainButton, Value } from "./CryptoComponents";
+import {
+  BalanceValue,
+  CivicSection,
+  CivicTitle,
+  Container,
+  ErrorText,
+  formatBalance,
+  InfoCard,
+  InfoRow,
+  Label,
+  LoadingCryptoKey,
+  LoadingText,
+  NetworkInfo,
+  PublicKeyValue,
+  Section,
+  SectionTitle,
+  StyledUserButton,
+  SuccessText,
+  Value,
+} from "./CryptoComponents";
+import { useAutoConnect } from "@civic/auth-web3/wagmi";
+import { userHasWallet } from "@civic/auth-web3";
+import { Button } from "@calimero-network/mero-ui";
 
 export default function CryptoSettings() {
   const [username, setUsername] = useState<string>("");
   const [evmPublicKey, setEvmPublicKey] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isSettingCryptoKey, setIsSettingCryptoKey] = useState<boolean>(false);
-  const [cryptoKeyMessage, setCryptoKeyMessage] = useState<string | null>(null);
+  const [isSettingCryptoKey, _setIsSettingCryptoKey] = useState<boolean>(false);
+  const [cryptoKeyMessage, _setCryptoKeyMessage] = useState<string | null>(null);
 
   // Civic and Wagmi hooks
   const userContext = useUser();
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
-  const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
+  const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
 
+  useAutoConnect();
   const balance = useBalance({
     address: address,
   });
 
   // Check if user is on Sepolia
   const isOnSepolia = chainId === sepolia.id;
-
-
-  // Function to switch to Sepolia chain
-  const handleSwitchToSepolia = async () => {
-    try {
-      await switchChain({ chainId: sepolia.id });
-    } catch (err) {
-      console.error("Error switching to Sepolia:", err);
-    }
-  };
-
-  // Function to set user crypto key
-  const setUserCryptoKey = async (walletAddress: string) => {
-    if (!walletAddress) return;
-
-    setIsSettingCryptoKey(true);
-    setCryptoKeyMessage(null);
-
-    try {
-      const executorId = getExecutorPublicKey();
-      if (!executorId) {
-        setCryptoKeyMessage("No executor public key found");
-        return;
-      }
-
-      const clientApi = new ClientApiDataSource();
-      const response = await clientApi.setUserCryptoKey({
-        user_id: executorId,
-        address: walletAddress,
-      });
-
-      if (response.data) {
-        setEvmPublicKey(walletAddress);
-        setCryptoKeyMessage("EVM public key set successfully!");
-        // Clear success message after 3 seconds
-        setTimeout(() => setCryptoKeyMessage(null), 3000);
-      } else {
-        setCryptoKeyMessage("Failed to set EVM public key");
-      }
-    } catch (err) {
-      console.error("Error setting crypto key:", err);
-      setCryptoKeyMessage("Error setting EVM public key");
-    } finally {
-      setIsSettingCryptoKey(false);
-    }
-  };
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -120,31 +97,6 @@ export default function CryptoSettings() {
     fetchUserInfo();
   }, []);
 
-  // Auto-set crypto key when user has address but no EVM public key
-  useEffect(() => {
-    if (address && !evmPublicKey && !isLoading && !isSettingCryptoKey) {
-      setUserCryptoKey(address);
-    }
-  }, [address, evmPublicKey, isLoading, isSettingCryptoKey]);
-
-  // Handle logout - clear balance and address when user disconnects from Civic
-  useEffect(() => {
-    if (!userContext.user) {
-      // User logged out from Civic - clear any crypto key messages and disconnect wallet
-      setCryptoKeyMessage(null);
-      setIsSettingCryptoKey(false);
-      
-      // Disconnect wallet when user logs out from Civic
-      if (address) {
-        try {
-          disconnect();
-        } catch (err) {
-          console.error("Error disconnecting wallet:", err);
-        }
-      }
-    }
-  }, [userContext.user, address, disconnect]);
-
   // Refresh user info when user logs back in to Civic
   useEffect(() => {
     if (userContext.user && !isLoading) {
@@ -183,6 +135,46 @@ export default function CryptoSettings() {
       refreshUserInfo();
     }
   }, [userContext.user, isLoading]);
+
+  // A function to connect an existing civic embedded wallet
+  const connectExistingWallet = () => {
+    return connect({
+      connector: connectors?.[0],
+    });
+  };
+
+  const [_isCreatingWallet, setIsCreatingWallet] = useState<boolean>(false);
+
+  // A function that creates the wallet if the user doesn't have one already
+  const createWallet = async () => {
+    setIsCreatingWallet(true);
+    if (userContext.user && !userHasWallet(userContext)) {
+      // Once the wallet is created, we can connect it straight away
+      return userContext.createWallet().then(connectExistingWallet);
+    }
+    setIsCreatingWallet(false);
+  };
+
+  const [isSavingNewAddress, setIsSavingNewAddress] = useState<boolean>(false);
+
+  const saveNewAddress = async (address: string) => {
+    setIsSavingNewAddress(true);
+    try {
+      const response = await new ClientApiDataSource().setUserCryptoKey({
+        user_id: getExecutorPublicKey() ?? "",
+        address: address,
+      });
+      if (response.data === null) {
+        setEvmPublicKey(address);
+      } else {
+        setError("Failed to save new address");
+      }
+    } catch (err) {
+      console.error("Error saving new address:", err);
+    } finally {
+      setIsSavingNewAddress(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -246,26 +238,19 @@ export default function CryptoSettings() {
         <Section>
           <CivicSection>
             <CivicTitle>Wallet Connection</CivicTitle>
-
-            {/* Show chain warning if user is connected but not on Sepolia */}
-            {userContext.user && address && !isOnSepolia && (
-              <ChainWarning>
-                <ChainWarningText>
-                  ⚠️ Please switch to Sepolia Testnet to use crypto features
-                </ChainWarningText>
-                <SwitchChainButton 
-                  onClick={handleSwitchToSepolia}
-                  disabled={isSwitchingChain}
-                >
-                  {isSwitchingChain ? "Switching..." : "Switch to Sepolia"}
-                </SwitchChainButton>
-              </ChainWarning>
-            )}
-
             {/* Always show login button centered */}
             <StyledUserButton style={{ marginBottom: "1rem" }}>
-              <UserButton />
+              <UserButton onSignOut={() => {
+                userContext.signOut();
+                disconnect();
+              }}/>
             </StyledUserButton>
+
+            {userContext.user && !userHasWallet(userContext) && (
+              <StyledUserButton onClick={createWallet}>
+                Create Wallet
+              </StyledUserButton>
+            )}
 
             {/* Only show other elements when user is logged in */}
             {userContext.user && (
@@ -280,17 +265,29 @@ export default function CryptoSettings() {
                 <InfoRow>
                   <Label>Connected Address</Label>
                   <PublicKeyValue>
-                    {address ? address : isConnected ? "Connected but address not available" : "Not connected"}
+                    {address
+                      ? address
+                      : isConnected
+                        ? "Connected but address not available"
+                        : "Not connected"}
                   </PublicKeyValue>
+                  {address && (
+                    <div onClick={() => saveNewAddress(address)}>
+                      <Button variant="secondary" disabled={isSavingNewAddress}>
+                        {isSavingNewAddress ? "Saving..." : "Save New Address"}
+                      </Button>
+                    </div>
+                  )}
                 </InfoRow>
 
                 <InfoRow>
                   <Label>Network</Label>
                   <Value>
-                    {isOnSepolia ? "Sepolia Testnet" : `Chain ID: ${chainId || "Not available"}`}
+                    {isOnSepolia
+                      ? "Sepolia Testnet"
+                      : `Chain ID: ${chainId || "Not available"}`}
                   </Value>
                 </InfoRow>
-
               </>
             )}
 

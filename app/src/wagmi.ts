@@ -1,14 +1,10 @@
+import { embeddedWallet } from '@civic/auth-web3/wagmi'
 import { http, createConfig } from 'wagmi'
 import { sepolia } from 'wagmi/chains'
-import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors'
 
 export const config = createConfig({
   chains: [sepolia],
-  connectors: [
-    injected(),
-    coinbaseWallet(),
-    walletConnect({ projectId: import.meta.env.VITE_WC_PROJECT_ID }),
-  ],
+  connectors: [embeddedWallet()],
   transports: {
     [sepolia.id]: http('https://ethereum-sepolia-rpc.publicnode.com'),
   },

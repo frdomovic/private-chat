@@ -1034,3 +1034,22 @@ body {
     text-size-adjust: 100% !important;
   }
 }
+
+/* Fix for MetaKeep iframe z-index issue */
+#metakeep-iframe {
+  width: 100% !important;
+  height: 100% !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  border: none !important;
+  z-index: 999999 !important;
+  color-scheme: light !important;
+  background: transparent !important;
+  pointer-events: auto !important;
+}
+
+/* Also target any parent containers that might have pointer-events: none */
+#metakeep-iframe * {
+  pointer-events: auto !important;
+}
