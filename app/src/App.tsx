@@ -5,7 +5,6 @@ import { getAuthConfig, useCalimero } from "@calimero-network/calimero-client";
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "./components/LoadingSpinner";
 import IdleTimeoutWrapper from "./components/IdleTimeoutWrapper";
-import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import { isSessionExpired, clearStoredSession, clearDmContextId, clearSessionActivity, updateSessionActivity } from "./utils/session";
 
 function App() {
@@ -77,7 +76,6 @@ function App() {
         />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
-      <PWAInstallPrompt />
     </>
   );
 }
