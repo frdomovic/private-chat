@@ -225,6 +225,7 @@ export default function SearchChannelsContainer({
           
           // Get users who are already in DMs
           const usersInDMs = new Set<string>();
+
           if (dms.data) {
             dms.data.forEach((dm) => {
               // Add both participants of the DM
@@ -233,13 +234,14 @@ export default function SearchChannelsContainer({
             });
           }
 
+
           // Filter out current user and users already in DMs
           const availableUsersMap = new Map<string, string>();
-          generalUsers.forEach((username, userId) => {
+          for (const [userId, username] of Object.entries(generalUsers)) {
             if (userId !== currentUserId && !usersInDMs.has(userId)) {
               availableUsersMap.set(userId, username);
             }
-          });
+          }
 
           setAvailableUsers(availableUsersMap);
         }
