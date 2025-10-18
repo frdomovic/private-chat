@@ -132,6 +132,7 @@ export default function AppContainer({
               <SearchChannelsContainer
                 onChatSelected={updateSelectedActiveChat}
                 fetchChannels={fetchChannels}
+                createDM={createDM}
               />
             )}
           </Wrapper>
