@@ -3,6 +3,7 @@ import type { ActiveChat } from "../../types/Common";
 import ChannelDetailsPopup from "../popups/ChannelDetailsPopup";
 import { useState } from "react";
 import type { UserId } from "../../api/clientApi";
+import DMDetailsPopup from "../popups/DMDetailsPopup";
 
 const DropdownSelector = styled.div`
   display: flex;
@@ -173,6 +174,29 @@ export default function DetailsDropdown({
         fetchChannels={fetchChannels}
       />
     );
+  } else if (activeChat.type === "direct_message") {
+    const toggle = (
+      <DropdownSelector>
+        <ChannelIconContainer>
+          <SelectedChannelName>{activeChat.username}</SelectedChannelName>
+        </ChannelIconContainer>
+        <IconContainer>
+          <ChevronIcon
+            className={`bi bi-chevron-down ${isOpen ? "open" : ""}`}
+          />
+          <MobileCogIcon className="bi bi-gear-fill" />
+        </IconContainer>
+      </DropdownSelector>
+    );
+
+    return (
+      <DMDetailsPopup
+        toggle={toggle}
+        chat={activeChat}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
+    )
   }
   if (isOpenSearchChannel) {
     return <SelectedChannelName>Browse Channels</SelectedChannelName>;

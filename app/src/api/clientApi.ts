@@ -197,6 +197,15 @@ export interface GetUsernameProps {
   user_id: UserId;
 }
 
+export interface GetUserPublicKeyProps {
+  user_id: UserId;
+}
+
+export interface SetUserPublicKeyProps {
+  user_id: UserId;
+  address: string;
+}
+
 export type GetTotalDmUnreadCountProps = Record<string, never>;
 
 export type MarkAllDmsAsReadProps = Record<string, never>;
@@ -231,7 +240,9 @@ export enum ClientMethod {
   READ_DM = "mark_dm_as_read",
   GET_DM_UNREAD_COUNT = "get_dm_unread_count",
   GET_TOTAL_DM_UNREAD_COUNT = "get_total_dm_unread_count",
-  MARK_ALL_DMS_AS_READ = "mark_all_dms_as_read"
+  MARK_ALL_DMS_AS_READ = "mark_all_dms_as_read",
+  GET_CRYPTO_KEY = "get_member_address",
+  SET_CRYPTO_KEY = "update_member_address"
 }
 
 export interface ClientApi {
@@ -261,4 +272,6 @@ export interface ClientApi {
   updateDmHash(props: UpdateDmHashProps): ApiResponse<string>;
   readDm(props: ReadDmProps): ApiResponse<string>;
   getUsername(props: GetUsernameProps): ApiResponse<string>;
+  getUserCryptoKey(props: GetUserPublicKeyProps): ApiResponse<string>;
+  setUserCryptoKey(props: SetUserPublicKeyProps): ApiResponse<string>;
 }

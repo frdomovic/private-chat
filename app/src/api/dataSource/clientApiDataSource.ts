@@ -25,6 +25,7 @@ import {
   type GetMessagesProps,
   type GetNonMemberUsersProps,
   type GetUsernameProps,
+  type GetUserPublicKeyProps,
   type InviteToChannelProps,
   type JoinChannelProps,
   type JoinChatProps,
@@ -33,6 +34,7 @@ import {
   type ReadDmProps,
   type ReadMessageProps,
   type SendMessageProps,
+  type SetUserPublicKeyProps,
   type UpdateDmHashProps,
   type UpdateInvitationPayloadProps,
   type UpdateNewIdentityProps,
@@ -80,7 +82,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -141,7 +143,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
 
       return {
@@ -190,7 +192,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
 
       return {
@@ -239,7 +241,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as Channels,
@@ -290,7 +292,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as ChannelInfo,
@@ -317,8 +319,11 @@ export class ClientApiDataSource implements ClientApi {
     props: GetChannelMembersProps
   ): ApiResponse<Map<string, string>> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const response = await getJsonRpcClient().execute<any, Map<string, string>>(
+      const response = await getJsonRpcClient().execute<
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        any,
+        Map<string, string>
+      >(
         {
           contextId: getContextId() || "",
           method: ClientMethod.GET_CHANNEL_MEMBERS,
@@ -342,7 +347,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
 
       return {
@@ -395,7 +400,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -447,7 +452,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as UserId[],
@@ -498,7 +503,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -548,7 +553,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -605,7 +610,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
 
       return {
@@ -676,7 +681,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
 
       return {
@@ -725,7 +730,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as DMChatInfo[],
@@ -748,10 +753,16 @@ export class ClientApiDataSource implements ClientApi {
     }
   }
 
-  async getChatMembers(props: GetChatMembersProps): ApiResponse<Map<string, string>> {
+  async getChatMembers(
+    props: GetChatMembersProps
+  ): ApiResponse<Map<string, string>> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const response = await getJsonRpcClient().execute<any, Map<string, string>>(
+     
+      const response = await getJsonRpcClient().execute<
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        any,
+        Map<string, string>
+      >(
         {
           contextId: (props.isDM ? getDmContextId() : getContextId()) || "",
           method: ClientMethod.GET_CHAT_USERNAMES,
@@ -774,7 +785,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as Map<string, string>,
@@ -829,7 +840,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -882,7 +893,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -933,7 +944,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -986,7 +997,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as Message,
@@ -1037,7 +1048,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -1091,7 +1102,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -1142,7 +1153,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -1192,7 +1203,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -1214,8 +1225,8 @@ export class ClientApiDataSource implements ClientApi {
       };
     }
   }
-  
-    async readMessage(props: ReadMessageProps): ApiResponse<string> {
+
+  async readMessage(props: ReadMessageProps): ApiResponse<string> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const response = await getJsonRpcClient().execute<any, string>(
@@ -1243,7 +1254,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -1279,14 +1290,14 @@ export class ClientApiDataSource implements ClientApi {
             new_hash: props.new_hash,
           },
           executorPublicKey: getExecutorPublicKey() || "",
-          },
+        },
         {
           headers: {
             "Content-Type": "application/json",
           },
           timeout: 10000,
         }
-      );  
+      );
       if (response?.error) {
         return {
           data: null,
@@ -1295,7 +1306,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -1329,14 +1340,14 @@ export class ClientApiDataSource implements ClientApi {
             other_user_id: props.other_user_id,
           },
           executorPublicKey: getExecutorPublicKey() || "",
-        },  
+        },
         {
           headers: {
             "Content-Type": "application/json",
           },
           timeout: 10000,
         }
-      );  
+      );
       if (response?.error) {
         return {
           data: null,
@@ -1345,7 +1356,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -1395,7 +1406,7 @@ export class ClientApiDataSource implements ClientApi {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             message: (response?.error.error.cause.info as any).message,
           },
-        }
+        };
       }
       return {
         data: response?.result.output as string,
@@ -1404,6 +1415,107 @@ export class ClientApiDataSource implements ClientApi {
     } catch (error) {
       console.error("getUsername failed:", error);
       let errorMessage = "An unexpected error occurred during getUsername";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
+      return {
+        error: {
+          code: 500,
+          message: errorMessage,
+        },
+      };
+    }
+  }
+
+  async getUserCryptoKey(props: GetUserPublicKeyProps): ApiResponse<string> {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const response = await getJsonRpcClient().execute<any, string>(
+        {
+          contextId: getContextId() || "",
+          method: ClientMethod.GET_CRYPTO_KEY,
+          argsJson: {
+            user_id: props.user_id,
+          },
+          executorPublicKey: getExecutorPublicKey() || "",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 10000,
+        }
+      );
+      if (response?.error) {
+        return {
+          data: null,
+          error: {
+            code: response?.error.code,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            message: (response?.error.error.cause.info as any).message,
+          },
+        };
+      }
+      return {
+        data: response?.result.output as string,
+        error: null,
+      };
+    } catch (error) {
+      console.error("getCryptoKey failed:", error);
+      let errorMessage = "An unexpected error occurred during getCryptoKey";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
+      return {
+        error: {
+          code: 500,
+          message: errorMessage,
+        },
+      };
+    }
+  }
+
+  async setUserCryptoKey(props: SetUserPublicKeyProps): ApiResponse<string> {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const response = await getJsonRpcClient().execute<any, string>(
+        {
+          contextId: getContextId() || "",
+          method: ClientMethod.SET_CRYPTO_KEY,
+          argsJson: {
+            user_id: props.user_id,
+            address: props.address,
+          },
+          executorPublicKey: getExecutorPublicKey() || "",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 10000,
+        }
+      );
+      if (response?.error) {
+        return {
+          data: null,
+          error: {
+            code: response?.error.code,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            message: (response?.error.error.cause.info as any).message,
+          },
+        };
+      }
+      return {
+        data: response?.result.output as string,
+        error: null,
+      };
+    } catch (error) {
+      console.error("getCryptoKey failed:", error);
+      let errorMessage = "An unexpected error occurred during getCryptoKey";
       if (error instanceof Error) {
         errorMessage = error.message;
       } else if (typeof error === "string") {
