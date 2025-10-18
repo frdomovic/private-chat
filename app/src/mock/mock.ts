@@ -78,8 +78,8 @@ export const mockChannelUsers: User[] = [
 
 export const defaultActiveChat: ActiveChat = {
   type: "channel",
-  id: "general",
-  name: "general",
+  id: "search",
+  name: "search",
   readOnly: false,
 };
 

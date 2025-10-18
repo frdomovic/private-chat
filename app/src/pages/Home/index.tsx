@@ -21,7 +21,6 @@ import {
   setDmContextId,
   updateSessionChat,
 } from "../../utils/session";
-import { defaultActiveChat } from "../../mock/mock";
 import { ClientApiDataSource } from "../../api/dataSource/clientApiDataSource";
 import {
   type ResponseData,
@@ -55,7 +54,7 @@ const debounce = <T extends (...args: any[]) => any>(
 
 export default function Home({ isConfigSet }: { isConfigSet: boolean }) {
   const { app } = useCalimero();
-  const [isOpenSearchChannel, setIsOpenSearchChannel] = useState(false);
+  const [isOpenSearchChannel, setIsOpenSearchChannel] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [channelUsers, setChannelUsers] = useState<Map<string, string>>(
     new Map()
@@ -229,13 +228,28 @@ export default function Home({ isConfigSet }: { isConfigSet: boolean }) {
 
   useLayoutEffect(() => {
     const storedSession: ActiveChat | null = getStoredSession();
-    const chatToUse = storedSession || defaultActiveChat;
+    
+    // If no stored session, start with browse channels page instead of general chat
+    if (!storedSession) {
+      setIsOpenSearchChannel(true);
+      openSearchPage();
+      setActiveChat(null);
+      activeChatRef.current = null;
+      setMessagesOffset(20);
+      setTotalMessageCount(0);
+      return;
+    }
 
+    // If there's a stored session, use it
+    if (storedSession.name === "search") {
+      openSearchPage();
+      return;
+    }
+    const chatToUse = storedSession;
     setActiveChat(chatToUse);
     activeChatRef.current = chatToUse;
     getChannelUsers(chatToUse.name);
     getNonInvitedUsers(chatToUse.name);
-
 
     setTimeout(() => {
       updateSelectedActiveChat(chatToUse);

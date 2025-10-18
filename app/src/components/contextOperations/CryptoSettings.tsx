@@ -373,16 +373,6 @@ export default function CryptoSettings() {
   // Check if user is on Sepolia
   const isOnSepolia = chainId === sepolia.id;
 
-  // Debug logging
-  useEffect(() => {
-    console.log("Wallet Debug:", {
-      address,
-      isConnected,
-      chainId,
-      isOnSepolia,
-      userContext: !!userContext.user
-    });
-  }, [address, isConnected, chainId, isOnSepolia, userContext.user]);
 
   // Function to switch to Sepolia chain
   const handleSwitchToSepolia = async () => {
@@ -646,13 +636,6 @@ export default function CryptoSettings() {
                   </Value>
                 </InfoRow>
 
-                {/* Debug info - remove this later */}
-                <InfoRow>
-                  <Label>Debug Info</Label>
-                  <Value style={{ fontSize: '12px', color: '#888' }}>
-                    Connected: {isConnected ? 'Yes' : 'No'} | Address: {address ? 'Available' : 'Not Available'}
-                  </Value>
-                </InfoRow>
               </>
             )}
 

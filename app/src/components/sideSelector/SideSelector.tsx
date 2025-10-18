@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import type { ActiveChat, ChannelMeta } from "../../types/Common";
-import ChannelHeader from "./ChannelHeader";
-import ChannelList from "./ChannelList";
+// import ChannelHeader from "./ChannelHeader";
+// import ChannelList from "./ChannelList";
 import { CurbLogo } from "../navbar/CurbNavbar";
 import DMSideSelector from "./DMSideSelector";
 import type { DMChatInfo } from "../../api/clientApi";
@@ -183,7 +183,7 @@ const SearchChannels: React.FC<SearchChannelsProps> = ({
           </clipPath>
         </defs>
       </svg>
-      {!isCollapsed && <span className="searchTitle">Browse Channels</span>}
+      {!isCollapsed && <span className="searchTitle">Browse Users</span>}
       <CollapseButton 
         onClick={(e) => {
           e.stopPropagation();
@@ -264,7 +264,7 @@ const SectionLabel = styled.div`
 `;
 
 const SideSelector: React.FC<SideSelectorProps> = (props) => {
-  const channels = props.channels;
+  // const channels = props.channels;
   const isSidebarOpen = props.isSidebarOpen;
   const setIsOpenSearchChannel = props.setIsOpenSearchChannel;
   const isOpenSearchChannel = props.isOpenSearchChannel;
@@ -282,7 +282,7 @@ const SideSelector: React.FC<SideSelectorProps> = (props) => {
           onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
         />
         <HorizontalSeparatorLine $isMobile={false} />
-        {isCollapsed && <SectionLabel>CH</SectionLabel>}
+        {/* {isCollapsed && <SectionLabel>CH</SectionLabel>}
         <ChannelHeader key="channels-header" title="Channels" isCollapsed={isCollapsed} />
         <ChannelList
           channels={channels}
@@ -294,7 +294,7 @@ const SideSelector: React.FC<SideSelectorProps> = (props) => {
           }
           isCollapsed={isCollapsed}
         />
-        <HorizontalSeparatorLine $isMobile={true} />
+        <HorizontalSeparatorLine $isMobile={true} /> */}
         {isCollapsed && <SectionLabel>DM</SectionLabel>}
         <DMSideSelector
           chatMembers={props.chatMembers}

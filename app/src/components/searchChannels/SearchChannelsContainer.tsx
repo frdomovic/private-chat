@@ -290,18 +290,18 @@ export default function SearchChannelsContainer({
     <SearchContainer>
       <div className="inputFieldWrapper">
         <SearchInput
-          label="Search Channels"
+          label="Search Users"
           style={{ width: "100%" }}
           onChange={(e) => setInputValue(e)}
           value={inputValue}
-          placeholder="Search channels..."
+          placeholder="Search users..."
           clearable={false}
           showSuggestions={false}
           showCategories={false}
         />
       </div>
       <div className="channelListWrapper">
-        <div className="listHeader">Channel List</div>
+        <div className="listHeader">User List</div>
         <div className="list">
           {channelsStartingWithPrefix
             .filter((channel) => channel.name !== "")

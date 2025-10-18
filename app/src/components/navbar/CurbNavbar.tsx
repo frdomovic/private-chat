@@ -29,6 +29,9 @@ const CurbNameContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 0.125rem;
+  padding-left: 0.75rem;
+  margin-right: 2.25rem;
+  font-weight: 800;
   color: #fff;
   @media (min-width: 1025px) {
     padding-right: 6rem;
@@ -113,8 +116,7 @@ const FlexContainer = styled.div`
 export const CurbLogo = ({ isMobile }: { isMobile: boolean }) => {
   return (
     <LogoContainer $isMobile={isMobile}>
-      <img src={CurbLogoIcon} alt="Calimero Logo" height="32px" width="auto" />
-      <CurbNameContainer></CurbNameContainer>
+      <CurbNameContainer>Private Chat</CurbNameContainer>
     </LogoContainer>
   );
 };

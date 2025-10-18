@@ -64,19 +64,6 @@ const DMHeader = memo(function DMHeader({ createDM, chatMembers, isCollapsed }: 
   return (
     <Container $isCollapsed={isCollapsed}>
       {!isCollapsed && <TextBold>{"Direct Messages"}</TextBold>}
-      <StartDMPopup
-        title="Create a new private DM context"
-        placeholder="invite user by entering their name"
-        buttonText="Next"
-        toggle={
-          <IconPlusContainer>
-            <i className="bi bi-plus-circle" />
-          </IconPlusContainer>
-        }
-        chatMembers={chatMembers}
-        validator={isValidIdentityId}
-        functionLoader={createDM}
-      />
     </Container>
   );
 });
