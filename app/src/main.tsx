@@ -29,7 +29,6 @@ if (!CLIENT_ID) throw new Error('CLIENT_ID is required');
 const AUTH_SERVER = import.meta.env.VITE_AUTH_SERVER;
 const WALLET_API_BASE_URL = import.meta.env.VITE_WALLET_API_BASE_URL;
 
-
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(

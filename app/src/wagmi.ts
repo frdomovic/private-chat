@@ -5,26 +5,13 @@ import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors'
 export const config = createConfig({
   chains: [sepolia],
   connectors: [
-    injected({
-      target: 'metaMask',
-    }),
-    coinbaseWallet({
-      appName: 'Calimero Chat',
-    }),
-    walletConnect({ 
-      projectId: import.meta.env.VITE_WC_PROJECT_ID,
-      metadata: {
-        name: 'Calimero Chat',
-        description: 'Private chat application with crypto payments',
-        url: window.location.origin,
-        icons: ['https://calimero.network/favicon.ico']
-      }
-    }),
+    injected(),
+    coinbaseWallet(),
+    walletConnect({ projectId: import.meta.env.VITE_WC_PROJECT_ID }),
   ],
   transports: {
-    [sepolia.id]: http(),
+    [sepolia.id]: http('https://ethereum-sepolia-rpc.publicnode.com'),
   },
-  ssr: false,
 })
 
 declare module 'wagmi' {

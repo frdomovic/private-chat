@@ -351,8 +351,8 @@ const DMDetailsContainer: React.FC<DetailsContainerProps> = (props) => {
         }
         
       } catch (err) {
-        setError("Failed to fetch crypto keys");
-        console.error("Error fetching crypto keys:", err);
+        setError("Failed to fetch user EVM address");
+        console.error("Error fetching EVM address:", err);
       } finally {
         setIsLoading(false);
       }
@@ -469,7 +469,7 @@ const DMDetailsContainer: React.FC<DetailsContainerProps> = (props) => {
   }, [isSuccess, hash, transactionSuccess, messageSent, amount, channelName, sendFinancialMessage]);
 
   const handleNotifyUser = async () => {
-    const message = `🔔 Please setup your Ethereum public key in General Settings to receive crypto payments`;
+    const message = `🔔 Please setup your Ethereum address in General Settings to receive crypto payments`;
     await sendFinancialMessage(message);
   };
 
@@ -482,7 +482,7 @@ const DMDetailsContainer: React.FC<DetailsContainerProps> = (props) => {
   };
 
   const formatPublicKey = (key: string | null) => {
-    if (!key) return "Not set";
+    if (!key) return "Address not set";
     return `${key.slice(0, 6)}...${key.slice(-6)}`;
   };
 
@@ -502,7 +502,7 @@ const DMDetailsContainer: React.FC<DetailsContainerProps> = (props) => {
     <Wrapper>
       <AccountSection>
         <AccountName>{channelName}</AccountName>
-        <PublicKeyLabel>Ethereum Public Key:</PublicKeyLabel>
+        <PublicKeyLabel>Ethereum Address:</PublicKeyLabel>
         <NetworkInfo>Network: Sepolia</NetworkInfo>
         <PublicKeyValue>
           {receiverCryptoKey ? formatPublicKey(receiverCryptoKey) : "Not set"}
@@ -567,7 +567,7 @@ const DMDetailsContainer: React.FC<DetailsContainerProps> = (props) => {
               {isSendingMessage ? "⏳" : "🔔"}
             </NotifyButton>
             <NotifyText>
-              {isSendingMessage ? "Sending notification..." : "Notify user to setup crypto key"}
+              {isSendingMessage ? "Sending notification..." : "Notify user to setup Ethereum address"}
             </NotifyText>
           </NotifyContainer>
         )}
@@ -576,8 +576,8 @@ const DMDetailsContainer: React.FC<DetailsContainerProps> = (props) => {
         {!canRequestPayment && (
           <SetupMessage>
             {!userContext.user 
-              ? "Please log in with Civic and setup your Ethereum public key in General Settings to send and request crypto payments."
-              : "Setup your Ethereum public key in General Settings to send and request crypto payments."
+              ? "Please log in with Civic and setup your Ethereum address in General Settings to send and request crypto payments."
+              : "Setup your Ethereum address in General Settings to send and request crypto payments."
             }
           </SetupMessage>
         )}
@@ -585,7 +585,7 @@ const DMDetailsContainer: React.FC<DetailsContainerProps> = (props) => {
         {/* Notify message when user has key but receiver doesn't */}
         {canRequestPayment && !canSendPayment && !shouldShowNotifyButton && (
           <NotifyMessage>
-            This user hasn't set up their Ethereum public key yet. They need to configure it to receive crypto payments.
+            This user hasn't set up their Ethereum address yet. They need to configure it to receive crypto payments.
           </NotifyMessage>
         )}
       </PaymentSection>
