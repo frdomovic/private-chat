@@ -67,6 +67,7 @@ export interface Message {
   reactions: HashMap<string, UserId[]>;
   thread_count: number;
   thread_last_timestamp: number;
+  is_financial?: boolean;
 }
 
 export interface MessageWithReactions extends Message {
@@ -82,6 +83,7 @@ export interface SendMessageProps {
   parent_message?: string;
   is_dm?: boolean;
   dm_identity?: UserId;
+  is_financial?: boolean;
 }
 
 export interface FullMessageResponse {

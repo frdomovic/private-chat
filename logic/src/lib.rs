@@ -39,6 +39,7 @@ pub struct Message {
     pub text: String,
     pub edited_on: Option<u64>,
     pub deleted: Option<bool>,
+    pub is_financial: bool,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Clone)]
@@ -57,6 +58,7 @@ pub struct MessageWithReactions {
     pub deleted: Option<bool>,
     pub thread_count: u32,
     pub thread_last_timestamp: u64,
+    pub is_financial: bool,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, PartialEq, Eq, Clone)]
@@ -216,6 +218,7 @@ pub struct CurbChat {
     name: String,
     created_at: u64,
     members: UnorderedSet<UserId>,
+    member_addresses: UnorderedMap<UserId, String>,
     member_usernames: UnorderedMap<UserId, String>,
     channels: UnorderedMap<Channel, ChannelInfo>,
     threads: UnorderedMap<MessageId, Vector<Message>>,
@@ -247,6 +250,7 @@ impl CurbChat {
         let mut channel_members: UnorderedMap<Channel, UnorderedSet<UserId>> = UnorderedMap::new();
         let mut moderators: UnorderedSet<UserId> = UnorderedSet::new();
         let mut member_usernames: UnorderedMap<UserId, String> = UnorderedMap::new();
+        let mut member_addresses: UnorderedMap<UserId, String> = UnorderedMap::new();
 
         let _ = members.insert(executor_id);
 
@@ -283,6 +287,8 @@ impl CurbChat {
             let mut new_members = UnorderedSet::new();
             let _ = new_members.insert(executor_id);
 
+            let _ = member_addresses.insert(executor_id, "".to_string());
+
             if is_dm {
                 if let Some(invitee_id) = &invitee {
                     let _ = new_members.insert(invitee_id.clone());
@@ -298,6 +304,7 @@ impl CurbChat {
             name,
             created_at,
             members,
+            member_addresses,
             member_usernames,
             channels,
             threads: UnorderedMap::new(),
@@ -1185,6 +1192,7 @@ impl CurbChat {
         parent_message: Option<MessageId>,
         timestamp: u64,
         sender_username: String,
+        is_financial: bool,
     ) -> app::Result<Message, String> {
         let executor_id = self.get_executor_id();
         let sender_username = match self.member_usernames.get(&executor_id) {
@@ -1203,6 +1211,7 @@ impl CurbChat {
             text: message,
             deleted: None,
             edited_on: None,
+            is_financial: is_financial,
         };
 
         let mut channel_info = match self.channels.get(&group) {
@@ -1336,6 +1345,7 @@ impl CurbChat {
                             edited_on: message.edited_on,
                             thread_count: 0,
                             thread_last_timestamp: 0,
+                            is_financial: message.is_financial,
                         });
                     }
                 }
@@ -1438,6 +1448,7 @@ impl CurbChat {
                         edited_on: message.edited_on,
                         thread_count: threads_count as u32,
                         thread_last_timestamp: last_timestamp,
+                        is_financial: message.is_financial,
                     });
                 }
             }
@@ -1449,6 +1460,17 @@ impl CurbChat {
             messages: messages,
             start_position: offset as u32,
         })
+    }
+
+    pub fn get_member_address(&self, user_id: UserId) -> String {
+        match self.member_addresses.get(&user_id) {
+            Ok(Some(address)) => address.clone(),
+            _ => "".to_string(),
+        }
+    }
+
+    pub fn update_member_address(&mut self, user_id: UserId, address: String) {
+        let _ = self.member_addresses.insert(user_id, address);
     }
 
     pub fn update_reaction(

@@ -655,6 +655,7 @@ export class ClientApiDataSource implements ClientApi {
             parent_message: props.parent_message,
             timestamp: props.timestamp,
             sender_username: "",
+            is_financial: props.is_financial,
           },
           executorPublicKey:
             (props.is_dm ? props.dm_identity : getExecutorPublicKey()) || "",

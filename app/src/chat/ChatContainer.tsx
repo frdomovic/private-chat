@@ -213,6 +213,7 @@ export default function ChatContainer({
       is_dm: isDM,
       dm_identity: activeChatRef.current?.account,
       parent_message: isThread ? currentOpenThreadRef.current?.id : undefined,
+      is_financial: false,
     });
 
     if (isDM) {

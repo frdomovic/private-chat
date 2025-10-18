@@ -382,6 +382,7 @@ export default function Home({ isConfigSet }: { isConfigSet: boolean }) {
           editMode: false,
           status: MessageStatus.sent,
           deleted: message.deleted,
+          isFinancial: message.is_financial,
         }));
 
       if (newMessages.length > 0) {
@@ -578,6 +579,7 @@ export default function Home({ isConfigSet }: { isConfigSet: boolean }) {
           editMode: false,
           status: MessageStatus.sent,
           deleted: message.deleted,
+          isFinancial: message.is_financial,
         })
       );
 
@@ -760,6 +762,7 @@ export default function Home({ isConfigSet }: { isConfigSet: boolean }) {
           images: [],
           editMode: false,
           status: MessageStatus.sent,
+          isFinancial: message.is_financial,
         })
       );
       setMessagesOffset(messagesOffset + 20);
@@ -867,6 +870,7 @@ export default function Home({ isConfigSet }: { isConfigSet: boolean }) {
           editMode: false,
           status: MessageStatus.sent,
           deleted: message.deleted,
+          isFinancial: message.is_financial,
         })
       );
 
@@ -932,6 +936,7 @@ export default function Home({ isConfigSet }: { isConfigSet: boolean }) {
           editMode: false,
           status: MessageStatus.sent,
           deleted: message.deleted,
+          isFinancial: message.is_financial,
         })
       );
       setThreadMessagesOffset(threadMessagesOffset + 20);
