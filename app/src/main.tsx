@@ -5,6 +5,11 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { AppMode, CalimeroProvider } from "@calimero-network/calimero-client";
 import { APPLICATION_ID, APPLICATION_PATH } from "./constants/config.ts";
+import { config } from './wagmi.ts'
+import { WagmiProvider } from 'wagmi'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+globalThis.Buffer = Buffer;
 
 // Register service worker for PWA
 if ('serviceWorker' in navigator) {
@@ -17,9 +22,13 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+const queryClient = new QueryClient()
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
+    <WagmiProvider config={config}>
+    <QueryClientProvider client={queryClient}>
     <CalimeroProvider
       clientApplicationId={APPLICATION_ID}
       mode={AppMode.MultiContext}
@@ -27,6 +36,9 @@ createRoot(document.getElementById("root")!).render(
     >
       <App />
     </CalimeroProvider>
+    </QueryClientProvider>
+    </WagmiProvider>
+   
     </BrowserRouter>
   </StrictMode>
 );
